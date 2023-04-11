@@ -1,62 +1,51 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-
-import 'package:flutter/services.dart';
 import 'package:responsive_class/responsive_class.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
-  final _responsiveClassPlugin = ResponsiveClass();
-
-  @override
-  void initState() {
-    super.initState();
-    initPlatformState();
-  }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    // We also handle the message potentially returning null.
-    try {
-      platformVersion =
-          await _responsiveClassPlugin.getPlatformVersion() ?? 'Unknown platform version';
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-    });
-  }
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Center(
-          child: Text('Running on: $_platformVersion\n'),
-        ),
+    return ResponsiveClass(
+      builder: (context, orientation, screenType) {
+        return MaterialApp(
+          title: 'Responsive Sizer Example',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+          ),
+          home: Home(),
+        );
+      },
+      maxTabletWidth: 900, // Optional
+    );
+  }
+}
+
+class Home extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    late final String screenTypeText;
+
+    switch (Device.screenType) {
+      case ScreenType.mobile:
+        screenTypeText = "My screen's type is Mobile";
+        break;
+      case ScreenType.tablet:
+        screenTypeText = "My screen's type is Tablet";
+        break;
+      // ScreenType can only be desktop when `maxTabletWidth`
+      // is set in `ResponsiveSizer`
+      case ScreenType.desktop:
+        screenTypeText = "My screen's type is Desktop";
+        break;
+    }
+
+    return Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [],
       ),
     );
   }

@@ -1,7 +1,7 @@
 name: responsive_class
 description: A new Flutter plugin.
 version: 0.0.1
-homepage:
+repository: 'https://github.com/RomilPipaliya/responsive_class'
 
 environment:
   sdk: '>=2.18.4 <3.0.0'
